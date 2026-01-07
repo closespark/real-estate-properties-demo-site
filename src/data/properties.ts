@@ -1,0 +1,96 @@
+import { Property } from '@/components/PropertyCard';
+
+export const properties: Property[] = [
+  {
+    id: '1',
+    title: 'Luxury Beachfront Villa',
+    address: '123 Ocean Drive',
+    city: 'Miami Beach',
+    state: 'FL',
+    zipCode: '33139',
+    price: 1250000,
+    bedrooms: 4,
+    bathrooms: 3.5,
+    squareFeet: 3200,
+    image: '/images/placeholder.svg',
+    status: 'available',
+  },
+  {
+    id: '2',
+    title: 'Mountain View Retreat',
+    address: '456 Summit Trail',
+    city: 'Aspen',
+    state: 'CO',
+    zipCode: '81611',
+    price: 2100000,
+    bedrooms: 5,
+    bathrooms: 4,
+    squareFeet: 4500,
+    image: '/images/placeholder.svg',
+    status: 'available',
+  },
+  {
+    id: '3',
+    title: 'Lakeside Cottage',
+    address: '789 Lake Shore Road',
+    city: 'Lake Tahoe',
+    state: 'CA',
+    zipCode: '96150',
+    price: 875000,
+    bedrooms: 3,
+    bathrooms: 2,
+    squareFeet: 2100,
+    image: '/images/placeholder.svg',
+    status: 'coming-soon',
+  },
+  {
+    id: '4',
+    title: 'Desert Oasis Estate',
+    address: '321 Cactus Boulevard',
+    city: 'Scottsdale',
+    state: 'AZ',
+    zipCode: '85254',
+    price: 1650000,
+    bedrooms: 4,
+    bathrooms: 3.5,
+    squareFeet: 3800,
+    image: '/images/placeholder.svg',
+    status: 'available',
+  },
+  {
+    id: '5',
+    title: 'Historic Downtown Loft',
+    address: '555 Main Street',
+    city: 'Charleston',
+    state: 'SC',
+    zipCode: '29401',
+    price: 725000,
+    bedrooms: 2,
+    bathrooms: 2,
+    squareFeet: 1800,
+    image: '/images/placeholder.svg',
+    status: 'available',
+  },
+  {
+    id: '6',
+    title: 'Coastal Modern Home',
+    address: '888 Seaside Avenue',
+    city: 'Malibu',
+    state: 'CA',
+    zipCode: '90265',
+    price: 3200000,
+    bedrooms: 5,
+    bathrooms: 5.5,
+    squareFeet: 5200,
+    image: '/images/placeholder.svg',
+    status: 'coming-soon',
+  },
+];
+
+export const getPropertyById = (id: string): Property | undefined => {
+  return properties.find(property => property.id === id);
+};
+
+export const getFeaturedProperties = (limit: number = 3): Property[] => {
+  return properties.filter(p => p.status === 'available').slice(0, limit);
+};

@@ -1,0 +1,197 @@
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import HubSpotCTA from '@/components/HubSpotCTA';
+import HubSpotForm from '@/components/HubSpotForm';
+import { getPropertyById, properties } from '@/data/properties';
+
+export async function generateStaticParams() {
+  return properties.map((property) => ({
+    id: property.id,
+  }));
+}
+
+export default async function PropertyDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params;
+  const property = getPropertyById(id);
+
+  if (!property) {
+    notFound();
+  }
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  return (
+    <>
+      <Header />
+      
+      <main className="min-h-screen bg-gray-50">
+        {/* Property Hero */}
+        <section className="bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Image */}
+              <div className="relative h-96 lg:h-[600px] rounded-lg overflow-hidden">
+                <Image
+                  src={property.image}
+                  alt={property.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {property.status !== 'available' && (
+                  <div className="absolute top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-md font-semibold uppercase">
+                    {property.status === 'coming-soon' ? 'Coming Soon' : 'Sold'}
+                  </div>
+                )}
+              </div>
+
+              {/* Property Info */}
+              <div>
+                <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                  {property.title}
+                </h1>
+                
+                <p className="text-xl text-gray-600 mb-6">
+                  {property.address}, {property.city}, {property.state} {property.zipCode}
+                </p>
+                
+                <div className="text-4xl font-bold text-blue-600 mb-8">
+                  {formatPrice(property.price)}
+                </div>
+                
+                {/* Features */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  <div className="bg-gray-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
+                    <div className="text-sm text-gray-600">Bedrooms</div>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
+                    <div className="text-sm text-gray-600">Bathrooms</div>
+                  </div>
+                  {property.squareFeet && (
+                    <div className="bg-gray-50 p-4 rounded-lg text-center">
+                      <div className="text-2xl font-bold text-gray-900">
+                        {property.squareFeet.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-gray-600">Sq Ft</div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* HubSpot CTA */}
+                <div className="mb-6">
+                  <HubSpotCTA 
+                    ctaId="YOUR_CTA_ID" 
+                    portalId="YOUR_PORTAL_ID"
+                  />
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-semibold transition-colors">
+                    Schedule a Tour
+                  </button>
+                  <button className="w-full border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-md font-semibold transition-colors">
+                    Request Information
+                  </button>
+                  <button className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-md font-semibold transition-colors">
+                    Save Property
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Property Description */}
+        <section className="bg-white mt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Property Description</h2>
+            <div className="prose max-w-none text-gray-600">
+              <p className="mb-4">
+                Welcome to this stunning {property.title.toLowerCase()} located in the heart of {property.city}, {property.state}. 
+                This exceptional property offers {property.bedrooms} bedrooms and {property.bathrooms} bathrooms across 
+                {property.squareFeet ? ` ${property.squareFeet.toLocaleString()} square feet` : ' a spacious layout'}.
+              </p>
+              <p className="mb-4">
+                Perfect for vacation rentals or as a personal retreat, this property combines luxury amenities with 
+                prime location. Whether you're looking for an investment opportunity or your dream vacation home, 
+                this property delivers on all fronts.
+              </p>
+              <p>
+                The property features modern finishes, high-end appliances, and stunning views. Located in a 
+                sought-after neighborhood with easy access to local attractions, dining, and entertainment.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Amenities */}
+        <section className="bg-gray-50 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Amenities</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                'Air Conditioning',
+                'Heating',
+                'Washer/Dryer',
+                'Parking',
+                'WiFi',
+                'Kitchen',
+                'Pool',
+                'Hot Tub',
+                'Gym',
+                'Outdoor Space',
+                'BBQ Grill',
+                'Beach Access',
+              ].map((amenity) => (
+                <div key={amenity} className="flex items-center gap-2 bg-white p-3 rounded-lg">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-gray-700">{amenity}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Form */}
+        <section className="bg-white py-12">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+              Interested in This Property?
+            </h2>
+            <p className="text-gray-600 text-center mb-8">
+              Fill out the form below and our team will get back to you with more information
+            </p>
+            
+            <div className="bg-gray-50 p-8 rounded-lg">
+              {/* HubSpot Form for Property Inquiry */}
+              <HubSpotForm 
+                portalId="YOUR_PORTAL_ID" 
+                formId="YOUR_PROPERTY_INQUIRY_FORM_ID"
+              />
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+    </>
+  );
+}

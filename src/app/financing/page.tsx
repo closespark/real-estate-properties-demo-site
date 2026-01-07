@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HubSpotForm from '@/components/HubSpotForm';
@@ -277,12 +278,12 @@ export default function FinancingPage() {
             <p className="text-xl text-blue-100 mb-8">
               Browse our VA-acquired properties eligible for Vendee financing
             </p>
-            <a
+            <Link
               href="/properties"
               className="inline-block bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-md font-semibold transition-colors text-lg"
             >
               Search Properties
-            </a>
+            </Link>
           </div>
         </section>
       </main>

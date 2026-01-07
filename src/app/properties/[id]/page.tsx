@@ -129,7 +129,7 @@ export default async function PropertyDetailPage({
               </p>
               <p className="mb-4">
                 Perfect for vacation rentals or as a personal retreat, this property combines luxury amenities with 
-                prime location. Whether you're looking for an investment opportunity or your dream vacation home, 
+                prime location. Whether you&apos;re looking for an investment opportunity or your dream vacation home, 
                 this property delivers on all fronts.
               </p>
               <p>

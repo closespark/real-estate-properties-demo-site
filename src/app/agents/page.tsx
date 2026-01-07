@@ -135,7 +135,7 @@ export default function AgentsPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Broker Information</h3>
-                  <p className="text-gray-600">Provide your broker's contact information and brokerage details</p>
+                  <p className="text-gray-600">Provide your broker&apos;s contact information and brokerage details</p>
                 </div>
               </div>
 

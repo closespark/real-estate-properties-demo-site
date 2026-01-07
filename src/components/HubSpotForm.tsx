@@ -10,7 +10,11 @@ interface HubSpotFormProps {
 
 declare global {
   interface Window {
-    hbspt: any;
+    hbspt: {
+      forms: {
+        create: (options: Record<string, unknown>) => void;
+      };
+    };
   }
 }
 
@@ -35,15 +39,15 @@ export default function HubSpotForm({ portalId, formId, region = 'na1' }: HubSpo
           submitButtonClass: 'bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-semibold transition-colors cursor-pointer',
           errorClass: 'text-red-600 text-sm mt-1',
           errorMessageClass: 'text-red-600 text-sm',
-          onFormReady: function($form: any) {
-            // Form is ready - apply custom styling if needed
-            $form.find('input[type="submit"]').addClass('bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-semibold transition-colors cursor-pointer');
+          onFormReady: function() {
+            // Form is ready
+            console.log('HubSpot form ready');
           },
-          onFormSubmit: function($form: any) {
+          onFormSubmit: function() {
             // Form submitted - track analytics if needed
             console.log('Form submitted to HubSpot sandbox');
           },
-          onFormSubmitted: function($form: any) {
+          onFormSubmitted: function() {
             // Form submission confirmed
             console.log('Form submission confirmed by HubSpot sandbox');
           }

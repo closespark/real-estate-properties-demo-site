@@ -4,9 +4,42 @@ Demo clone of vrmproperties.com for showcasing HubSpot Listings, campaigns, and 
 
 This is a [Next.js](https://nextjs.org) project built with TypeScript and Tailwind CSS.
 
+## Quick Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+
+**Fastest way to deploy:**
+1. Click the "Deploy to Render" button above
+2. Connect your GitHub repository
+3. Render auto-detects the `render.yaml` configuration
+4. Click "Apply" to deploy
+
+See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for detailed deployment instructions.
+
+## Features
+
+- **100 Real Properties** from vrmproperties.com with authentic addresses
+- **Next.js 15** with App Router and TypeScript
+- **Tailwind CSS** for responsive, modern design
+- **HubSpot Sandbox Integration**
+  - Global tracking code for visitor analytics
+  - 4 External form embeds (contact, property inquiry, agent registration, VA financing)
+  - CTAs for marketing campaign demonstrations
+  - Real-time lead capture and workflow triggers
+- **Static Site Generation** - All 107 pages pre-rendered at build time
+- **Production Ready** - Optimized for deployment on Render, Vercel, or any Node.js host
+
 ## Getting Started
 
-First, run the development server:
+### Development
+
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
@@ -14,13 +47,86 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Features
+### Build for Production
 
-- Next.js 15 with App Router
-- TypeScript
-- Tailwind CSS
-- HubSpot Sandbox Integration
-  - Tracking code
-  - Forms
-  - CTAs for marketing campaigns
-- Property listings mirror of vrmproperties.com
+```bash
+npm run build
+npm start
+```
+
+## Deployment
+
+### Render (Recommended)
+
+See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for complete instructions.
+
+**Quick steps:**
+1. Sign up at [render.com](https://render.com)
+2. Click "New +" → "Web Service"
+3. Connect this GitHub repository
+4. Render auto-configures using `render.yaml`
+5. Click "Create Web Service"
+
+Your site will be live at `https://your-service-name.onrender.com`
+
+### Other Platforms
+
+This Next.js app can also be deployed to:
+- **Vercel**: [Deploy with Vercel](https://vercel.com/new)
+- **Netlify**: Compatible with Netlify
+- **AWS/Azure/GCP**: Deploy as a Node.js application
+
+## HubSpot Configuration
+
+After deployment, configure HubSpot integration:
+
+1. Create forms in your HubSpot sandbox (Marketing → Lead Capture → Forms)
+2. Update placeholder IDs in the code:
+   - `YOUR_HUBSPOT_ID` in `src/app/layout.tsx`
+   - `YOUR_PORTAL_ID` in all form components
+   - Form IDs in homepage, property pages, `/agents`, and `/financing`
+   - `YOUR_CTA_ID` in property detail pages
+
+See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions.
+
+## Project Structure
+
+```
+vrm-properties-demo-site/
+├── src/
+│   ├── app/                  # Next.js App Router pages
+│   │   ├── layout.tsx        # Root layout with HubSpot tracking
+│   │   ├── page.tsx          # Homepage
+│   │   ├── agents/           # Agent registration page
+│   │   ├── financing/        # VA financing page
+│   │   └── properties/       # Property listing and detail pages
+│   ├── components/           # Reusable React components
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── PropertyCard.tsx
+│   │   ├── HubSpotForm.tsx   # External form embed component
+│   │   └── HubSpotCTA.tsx
+│   └── data/
+│       └── properties.ts     # 100 real property listings
+├── public/                   # Static assets
+├── render.yaml              # Render deployment configuration
+└── package.json
+
+107 total pages (1 homepage + 6 static pages + 100 property detail pages)
+```
+
+## Documentation
+
+- [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) - HubSpot forms and tracking setup
+- [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) - Detailed Render deployment guide
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - General deployment options
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Forms**: HubSpot Forms Embed API v2
+- **Analytics**: HubSpot Tracking Code
+- **Deployment**: Render (with `render.yaml` blueprint)
+- **Rendering**: Static Site Generation (SSG) for optimal performance

@@ -11,24 +11,51 @@ All forms on this site use **HubSpot's external form embed** approach, which mea
 - No server-side proxy or API keys required
 - Forms work with HubSpot's GDPR and consent features
 
+## Server-Side Request Info Integration
+
+Property detail pages include an enhanced "Request Info" form that uses server-side processing for:
+- Contact creation/update with email-based deduplication
+- Marketing consent management (explicit opt-in)
+- Listing lookup and Contact-Listing association
+
+See [REQUEST_INFO_INTEGRATION.md](./REQUEST_INFO_INTEGRATION.md) for detailed documentation.
+
 ## Configuration Required
 
 To activate the HubSpot features, you need to set the following environment variables in your Render dashboard or `.env.local` file for local development:
 
 ### Environment Variables
 
+#### Client-Side (Tracking & Basic Forms)
+
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` | Your HubSpot portal ID (Hub ID) |
 | `NEXT_PUBLIC_HUBSPOT_FORM_GUID` | Form GUID for all HubSpot forms |
+
+#### Server-Side (Request Info Form Integration)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `HUBSPOT_PORTAL_ID` | Yes | HubSpot portal ID (Hub ID) |
+| `HUBSPOT_FORM_GUID` | Yes | Form GUID for contact creation |
+| `HUBSPOT_ACCESS_TOKEN` | Yes | Private App access token (keep secret!) |
+| `HUBSPOT_LISTINGS_OBJECT_TYPE` | No | Custom object type ID (default: `listings`) |
+| `HUBSPOT_CONTACT_LISTING_ASSOCIATION_TYPE` | No | Association type ID (default: `contact_to_listing`) |
 
 ### Local Development Setup
 
 Create a `.env.local` file in the project root:
 
 ```bash
+# Client-side (tracking)
 NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
 NEXT_PUBLIC_HUBSPOT_FORM_GUID=your_form_guid
+
+# Server-side (Request Info form)
+HUBSPOT_PORTAL_ID=your_portal_id
+HUBSPOT_FORM_GUID=your_form_guid
+HUBSPOT_ACCESS_TOKEN=your_private_app_access_token
 ```
 
 ### Render Deployment Setup

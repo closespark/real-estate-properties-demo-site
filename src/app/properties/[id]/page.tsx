@@ -236,7 +236,8 @@ export default async function PropertyDetailPage({
             </p>
             
             <div className="bg-gray-50 p-8 rounded-lg">
-              <PropertyInquiryForm />
+              {/* Pass the property ID as external_listing_id for HubSpot association */}
+              <PropertyInquiryForm externalListingId={property.id} />
             </div>
           </div>
         </section>

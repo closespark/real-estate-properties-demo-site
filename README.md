@@ -57,19 +57,35 @@ npm start
 
 This project uses the following environment variables for HubSpot integration:
 
+### Client-Side (Tracking & Basic Forms)
+
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` | Your HubSpot portal ID (Hub ID) |
 | `NEXT_PUBLIC_HUBSPOT_FORM_GUID` | Form GUID for all HubSpot forms |
 
+### Server-Side (Request Info Form Integration)
+
+| Variable | Description |
+|----------|-------------|
+| `HUBSPOT_PORTAL_ID` | HubSpot portal ID (Hub ID) |
+| `HUBSPOT_FORM_GUID` | Form GUID for contact creation |
+| `HUBSPOT_ACCESS_TOKEN` | Private App access token (keep secret!) |
+
 Create a `.env.local` file in the project root for local development:
 
 ```bash
+# Client-side (tracking)
 NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
 NEXT_PUBLIC_HUBSPOT_FORM_GUID=your_form_guid
+
+# Server-side (Request Info form)
+HUBSPOT_PORTAL_ID=your_portal_id
+HUBSPOT_FORM_GUID=your_form_guid
+HUBSPOT_ACCESS_TOKEN=your_private_app_access_token
 ```
 
-See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions.
+See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions and [REQUEST_INFO_INTEGRATION.md](./REQUEST_INFO_INTEGRATION.md) for the Request Info form workflow.
 
 ## Deployment
 

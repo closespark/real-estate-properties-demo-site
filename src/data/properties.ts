@@ -1271,7 +1271,6 @@ export const properties: Property[] = [
     price: 115000,
     bedrooms: 11,
     bathrooms: 1.0,
-    squareFeet: 0,
     image: 'https://s3.amazonaws.com/photos.vrmresales.com/8b0e7c27-f6c4-4aeb-963b-1b854ba3c87b.jpg',
     status: 'available',
   },

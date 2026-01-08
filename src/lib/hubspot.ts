@@ -19,6 +19,12 @@ export interface RequestInfoFormData {
   lastname: string;
   email: string;
   phone?: string;
+  /**
+   * The external listing ID used for HubSpot Listing lookups.
+   * This value corresponds to `assetId` from source property data.
+   * Do NOT use `assetReferenceId` - it's a secondary reference.
+   * See DATA_MAPPING.md for identifier documentation.
+   */
   external_listing_id: string;
   marketing_opt_in: boolean;
   pageUri?: string;
@@ -302,7 +308,11 @@ export async function setMarketingConsent(
  * without relying on HubSpot's internal IDs, making the integration more
  * resilient to data sync issues.
  * 
- * @param externalListingId - The external listing ID to search for
+ * **Data Mapping Note**: The external_listing_id corresponds to the `assetId`
+ * field from source property data, NOT the `assetReferenceId` which is a
+ * secondary human-facing reference. See DATA_MAPPING.md for details.
+ * 
+ * @param externalListingId - The external listing ID to search for (maps to assetId)
  * @returns Result containing the HubSpot Listing ID if found
  */
 export async function findListingByExternalId(

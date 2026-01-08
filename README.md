@@ -54,6 +54,32 @@ npm run build
 npm start
 ```
 
+## Environment Variables
+
+This project uses the following environment variables for HubSpot integration:
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` | Your HubSpot portal ID (Hub ID) |
+| `NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID` | Form ID for the homepage contact form |
+| `NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID` | Form ID for the agent registration form |
+| `NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID` | Form ID for the VA financing application form |
+| `NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID` | Form ID for the property inquiry form |
+| `NEXT_PUBLIC_HUBSPOT_CTA_ID` | CTA ID for property detail page CTAs |
+
+Create a `.env.local` file in the project root for local development:
+
+```bash
+NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
+NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID=your_contact_form_id
+NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID=your_agent_form_id
+NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID=your_financing_form_id
+NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID=your_property_inquiry_form_id
+NEXT_PUBLIC_HUBSPOT_CTA_ID=your_cta_id
+```
+
+See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions.
+
 ## Deployment
 
 ### Render (Recommended)

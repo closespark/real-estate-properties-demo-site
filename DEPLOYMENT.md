@@ -131,9 +131,7 @@ If you need to use environment variables for HubSpot configuration:
 Create `.env.local`:
 ```
 NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
-NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID=your_form_id
-NEXT_PUBLIC_HUBSPOT_PROPERTY_FORM_ID=your_property_form_id
-NEXT_PUBLIC_HUBSPOT_CTA_ID=your_cta_id
+NEXT_PUBLIC_HUBSPOT_FORM_GUID=your_form_guid
 ```
 
 Then update the components to use these variables instead of hardcoded values.

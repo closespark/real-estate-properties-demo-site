@@ -20,11 +20,7 @@ To activate the HubSpot features, you need to set the following environment vari
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` | Your HubSpot portal ID (Hub ID) |
-| `NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID` | Form ID for the homepage contact form |
-| `NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID` | Form ID for the agent registration form |
-| `NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID` | Form ID for the VA financing application form |
-| `NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID` | Form ID for the property inquiry form |
-| `NEXT_PUBLIC_HUBSPOT_CTA_ID` | CTA ID for property detail page CTAs |
+| `NEXT_PUBLIC_HUBSPOT_FORM_GUID` | Form GUID for all HubSpot forms |
 
 ### Local Development Setup
 
@@ -32,11 +28,7 @@ Create a `.env.local` file in the project root:
 
 ```bash
 NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
-NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID=your_contact_form_id
-NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID=your_agent_form_id
-NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID=your_financing_form_id
-NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID=your_property_inquiry_form_id
-NEXT_PUBLIC_HUBSPOT_CTA_ID=your_cta_id
+NEXT_PUBLIC_HUBSPOT_FORM_GUID=your_form_guid
 ```
 
 ### Render Deployment Setup
@@ -53,19 +45,15 @@ The environment variables are pre-configured in `render.yaml`. Set their values 
 
 1. Log into your HubSpot sandbox account
 2. Navigate to Marketing → Lead Capture → Forms
-3. Create forms for each page type:
-   - **General Contact Form** - For homepage (name, email, phone, message)
-   - **Property Inquiry Form** - For property detail pages (name, email, property interest, message)
-   - **Agent Registration Form** - For `/agents` page (name, email, phone, license #, broker info)
-   - **VA Financing Application** - For `/financing` page (name, email, phone, property interest, loan amount)
+3. Create a form to use across the site (name, email, phone, message)
 
-4. For each form:
+4. For the form:
    - Click on the form you created
    - Click "Share" or "Embed" button
    - Select "Embed code"
-   - Find the Form ID in the embed code (looks like: `formId: "abc123-def456-ghi789"`)
-   - Copy the Form ID
-   - Set the corresponding environment variable with the Form ID
+   - Find the Form GUID in the embed code (looks like: `formId: "abc123-def456-ghi789"`)
+   - Copy the Form GUID
+   - Set the `NEXT_PUBLIC_HUBSPOT_FORM_GUID` environment variable
 
 ### Region Configuration
 
@@ -82,14 +70,6 @@ Available regions:
 - `na1` - North America (default)
 - `eu1` - Europe
 - `ap1` - Asia Pacific
-
-### Setting Up CTAs
-
-1. In HubSpot, navigate to Marketing → Lead Capture → CTAs
-2. Create a new CTA (e.g., "Schedule Property Tour", "Request More Info")
-3. Customize the button text, style, and behavior
-4. Copy the CTA ID from the embed code
-5. Set the `NEXT_PUBLIC_HUBSPOT_CTA_ID` environment variable
 
 ### Getting Your Portal ID
 
@@ -108,7 +88,7 @@ After configuring the environment variables:
    - Look for `js.hsforms.net/forms/embed/v2.js`
    - Verify `js.hs-scripts.com/{YOUR_PORTAL_ID}.js` loads
 4. Verify forms render correctly on each page:
-   - Homepage: General contact form
+   - Homepage: Contact form
    - Property detail pages: Property inquiry form
    - `/agents`: Agent registration form
    - `/financing`: VA financing application form

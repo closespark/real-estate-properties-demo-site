@@ -29,7 +29,7 @@ This guide explains how to deploy the VRM Properties demo site to Render.
    - Add `NODE_VERSION` = `20.11.0`
    - Add HubSpot configuration (if ready):
      - `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` = your portal ID
-     - Other HubSpot-related env vars as needed
+     - `NEXT_PUBLIC_HUBSPOT_FORM_GUID` = your form GUID
 
 5. **Deploy**
    - Click "Create Web Service"
@@ -80,7 +80,7 @@ The application uses these commands (already configured):
 To enable HubSpot forms and tracking, add these in Render dashboard:
 
 - `NEXT_PUBLIC_HUBSPOT_PORTAL_ID`: Your HubSpot Portal ID
-- `NEXT_PUBLIC_HUBSPOT_REGION`: `na1`, `eu1`, or `ap1` (default: `na1`)
+- `NEXT_PUBLIC_HUBSPOT_FORM_GUID`: Your HubSpot Form GUID
 
 **Note**: For client-side HubSpot integration, you can also hardcode IDs directly in the components as documented in `HUBSPOT_INTEGRATION.md`.
 
@@ -97,16 +97,8 @@ After deployment, update the placeholder IDs in your components:
 
 **Forms** (various pages):
 ```typescript
-// Replace form IDs:
-// - YOUR_FORM_ID (homepage)
-// - YOUR_PROPERTY_INQUIRY_FORM_ID (property pages)
-// - YOUR_AGENT_REGISTRATION_FORM_ID (/agents)
-// - YOUR_VA_FINANCING_FORM_ID (/financing)
-```
-
-**CTAs** (`src/app/properties/[id]/page.tsx`):
-```typescript
-// Replace YOUR_CTA_ID with your actual CTA ID
+// Replace form GUID:
+// - YOUR_FORM_GUID (all pages use the same form)
 ```
 
 ### 2. Custom Domain (Optional)

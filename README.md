@@ -23,8 +23,7 @@ See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for detailed deployment instr
 - **Tailwind CSS** for responsive, modern design
 - **HubSpot Sandbox Integration**
   - Global tracking code for visitor analytics
-  - 4 External form embeds (contact, property inquiry, agent registration, VA financing)
-  - CTAs for marketing campaign demonstrations
+  - Form embeds using a single form GUID for all pages
   - Real-time lead capture and workflow triggers
 - **Static Site Generation** - All 107 pages pre-rendered at build time
 - **Production Ready** - Optimized for deployment on Render, Vercel, or any Node.js host
@@ -61,21 +60,13 @@ This project uses the following environment variables for HubSpot integration:
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_HUBSPOT_PORTAL_ID` | Your HubSpot portal ID (Hub ID) |
-| `NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID` | Form ID for the homepage contact form |
-| `NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID` | Form ID for the agent registration form |
-| `NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID` | Form ID for the VA financing application form |
-| `NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID` | Form ID for the property inquiry form |
-| `NEXT_PUBLIC_HUBSPOT_CTA_ID` | CTA ID for property detail page CTAs |
+| `NEXT_PUBLIC_HUBSPOT_FORM_GUID` | Form GUID for all HubSpot forms |
 
 Create a `.env.local` file in the project root for local development:
 
 ```bash
 NEXT_PUBLIC_HUBSPOT_PORTAL_ID=your_portal_id
-NEXT_PUBLIC_HUBSPOT_CONTACT_FORM_ID=your_contact_form_id
-NEXT_PUBLIC_HUBSPOT_AGENT_FORM_ID=your_agent_form_id
-NEXT_PUBLIC_HUBSPOT_FINANCING_FORM_ID=your_financing_form_id
-NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID=your_property_inquiry_form_id
-NEXT_PUBLIC_HUBSPOT_CTA_ID=your_cta_id
+NEXT_PUBLIC_HUBSPOT_FORM_GUID=your_form_guid
 ```
 
 See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions.
@@ -106,12 +97,11 @@ This Next.js app can also be deployed to:
 
 After deployment, configure HubSpot integration:
 
-1. Create forms in your HubSpot sandbox (Marketing → Lead Capture → Forms)
+1. Create a form in your HubSpot sandbox (Marketing → Lead Capture → Forms)
 2. Update placeholder IDs in the code:
    - `YOUR_HUBSPOT_ID` in `src/app/layout.tsx`
    - `YOUR_PORTAL_ID` in all form components
-   - Form IDs in homepage, property pages, `/agents`, and `/financing`
-   - `YOUR_CTA_ID` in property detail pages
+   - Form GUID in homepage, property pages, `/agents`, and `/financing`
 
 See [HUBSPOT_INTEGRATION.md](./HUBSPOT_INTEGRATION.md) for detailed setup instructions.
 
@@ -130,8 +120,7 @@ vrm-properties-demo-site/
 │   │   ├── Header.tsx
 │   │   ├── Footer.tsx
 │   │   ├── PropertyCard.tsx
-│   │   ├── HubSpotForm.tsx   # External form embed component
-│   │   └── HubSpotCTA.tsx
+│   │   └── HubSpotForm.tsx   # External form embed component
 │   └── data/
 │       └── properties.ts     # 100 real property listings
 ├── public/                   # Static assets

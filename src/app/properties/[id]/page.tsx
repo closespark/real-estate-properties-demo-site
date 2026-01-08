@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import HubSpotCTA from '@/components/HubSpotCTA';
 import PropertyActionButtons from '@/components/PropertyActionButtons';
 import PropertyInquiryForm from '@/components/PropertyInquiryForm';
 import { getPropertyById, properties } from '@/data/properties';
@@ -164,13 +163,6 @@ export default async function PropertyDetailPage({
                       </div>
                     </div>
                   )}
-                </div>
-                
-                {/* HubSpot CTA - Uses environment variables */}
-                <div className="mb-6">
-                  <HubSpotCTA 
-                    ctaId={process.env.NEXT_PUBLIC_HUBSPOT_CTA_ID || ''}
-                  />
                 </div>
                 
                 {/* Action Buttons */}

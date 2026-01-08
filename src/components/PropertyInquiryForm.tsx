@@ -12,7 +12,7 @@ export default function PropertyInquiryForm({
   formId 
 }: PropertyInquiryFormProps) {
   const effectivePortalId = portalId || process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID;
-  const effectiveFormId = formId || process.env.NEXT_PUBLIC_HUBSPOT_PROPERTY_INQUIRY_FORM_ID;
+  const effectiveFormId = formId || process.env.NEXT_PUBLIC_HUBSPOT_FORM_GUID;
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

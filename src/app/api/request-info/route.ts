@@ -182,6 +182,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
     details.contactSubmitted = true;
 
     // Step 2: Set marketing consent for the contact
+    // If the contact doesn't exist yet (e.g., Forms API hasn't processed it),
+    // this function will create a new contact before setting consent.
     // We wait a brief moment to allow HubSpot to process the form submission
     // before trying to update the contact's marketing consent.
     // The delay is configurable via environment variable (default: 1000ms).
@@ -190,11 +192,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<ApiRespon
       await new Promise(resolve => setTimeout(resolve, consentDelayMs));
     }
     
-    const consentResult = await setMarketingConsent(formData.email);
+    const consentResult = await setMarketingConsent(formData.email, {
+      firstname: formData.firstname,
+      lastname: formData.lastname,
+      phone: formData.phone,
+    });
     
     if (!consentResult.success) {
       // Log the error but don't fail the entire request
-      // The contact was still created successfully
+      // The contact creation/lookup may have still succeeded partially
       console.warn('Failed to set marketing consent:', consentResult.error);
     } else {
       details.marketingConsentSet = true;

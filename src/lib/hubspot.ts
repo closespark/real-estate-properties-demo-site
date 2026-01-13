@@ -54,6 +54,12 @@ export interface HubSpotAssociationResult {
   error?: string;
 }
 
+export interface HubSpotContactCreationResult {
+  success: boolean;
+  contactId?: string;
+  error?: string;
+}
+
 // ============================================================================
 // Environment Variable Helpers
 // ============================================================================
@@ -188,29 +194,21 @@ export async function submitContactToHubSpot(
 }
 
 // ============================================================================
-// Marketing Consent Management
+// Contact Lookup and Creation
 // ============================================================================
 
 /**
- * Sets marketing consent/eligibility for a contact in HubSpot.
+ * Searches for a contact by email in HubSpot.
  * 
- * This function marks a contact as marketing-eligible after explicit opt-in.
- * It uses the HubSpot CRM API to update the contact's marketing subscription status.
- * 
- * Note: This should only be called when marketing_opt_in is true, as we should
- * not assume global opt-in for users who haven't explicitly consented.
- * 
- * @param email - The contact's email address (used as identifier)
- * @returns Result indicating success/failure
+ * @param email - The email address to search for
+ * @returns Result containing the contact ID if found
  */
-export async function setMarketingConsent(
+export async function findContactByEmail(
   email: string
-): Promise<{ success: boolean; error?: string; contactId?: string }> {
+): Promise<{ success: boolean; contactId?: string; error?: string }> {
   try {
     const accessToken = getAccessToken();
 
-    // First, search for the contact by email to get their ID
-    // We need the contact ID to update their properties
     const searchResponse = await fetch(
       'https://api.hubapi.com/crm/v3/objects/contacts/search',
       {
@@ -241,22 +239,173 @@ export async function setMarketingConsent(
       console.error('HubSpot contact search error:', errorData);
       return {
         success: false,
-        error: `Failed to find contact: ${searchResponse.status}`,
+        error: `Failed to search for contact: ${searchResponse.status}`,
       };
     }
 
     const searchResult = await searchResponse.json();
-    
+
     if (!searchResult.results || searchResult.results.length === 0) {
-      // Contact not found - this can happen if there's a delay in contact creation
-      console.warn('Contact not found for email:', email);
       return {
-        success: false,
-        error: 'Contact not found in HubSpot',
+        success: true,
+        contactId: undefined, // Contact not found, but search was successful
       };
     }
 
-    const contactId = searchResult.results[0].id;
+    return {
+      success: true,
+      contactId: searchResult.results[0].id,
+    };
+  } catch (error) {
+    console.error('Error searching for contact:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
+}
+
+/**
+ * Creates a new contact in HubSpot via the CRM API.
+ * 
+ * This function is used when a contact lookup by email returns no results,
+ * ensuring that the Request Info flow can create contacts on-the-fly.
+ * 
+ * @param contactData - The contact data to create
+ * @returns Result containing the new contact ID if successful
+ */
+export async function createContact(
+  contactData: {
+    email: string;
+    firstname: string;
+    lastname: string;
+    phone?: string;
+  }
+): Promise<HubSpotContactCreationResult> {
+  try {
+    const accessToken = getAccessToken();
+
+    const properties: Record<string, string> = {
+      email: contactData.email,
+      firstname: contactData.firstname,
+      lastname: contactData.lastname,
+      lifecyclestage: 'lead',
+    };
+
+    if (contactData.phone) {
+      properties.phone = contactData.phone;
+    }
+
+    console.log(`Creating new contact in HubSpot for email: ${contactData.email}`);
+
+    const createResponse = await fetch(
+      'https://api.hubapi.com/crm/v3/objects/contacts',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ properties }),
+      }
+    );
+
+    if (!createResponse.ok) {
+      const errorData = await createResponse.json().catch(() => ({}));
+      console.error('HubSpot contact creation error:', errorData);
+      return {
+        success: false,
+        error: `Failed to create contact: ${createResponse.status} ${createResponse.statusText}`,
+      };
+    }
+
+    const createResult = await createResponse.json();
+    console.log(`Successfully created contact in HubSpot: ${createResult.id}`);
+
+    return {
+      success: true,
+      contactId: createResult.id,
+    };
+  } catch (error) {
+    console.error('Error creating contact:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
+}
+
+// ============================================================================
+// Marketing Consent Management
+// ============================================================================
+
+/**
+ * Sets marketing consent/eligibility for a contact in HubSpot.
+ * 
+ * This function marks a contact as marketing-eligible after explicit opt-in.
+ * It uses the HubSpot CRM API to update the contact's marketing subscription status.
+ * 
+ * If the contact does not exist, this function will create a new contact
+ * before setting marketing consent.
+ * 
+ * Note: This should only be called when marketing_opt_in is true, as we should
+ * not assume global opt-in for users who haven't explicitly consented.
+ * 
+ * @param email - The contact's email address (used as identifier)
+ * @param contactData - Optional contact data for creating a new contact if not found
+ * @returns Result indicating success/failure
+ */
+export async function setMarketingConsent(
+  email: string,
+  contactData?: {
+    firstname: string;
+    lastname: string;
+    phone?: string;
+  }
+): Promise<{ success: boolean; error?: string; contactId?: string }> {
+  try {
+    const accessToken = getAccessToken();
+
+    // First, search for the contact by email to get their ID
+    const searchResult = await findContactByEmail(email);
+
+    if (!searchResult.success) {
+      return {
+        success: false,
+        error: searchResult.error,
+      };
+    }
+
+    let contactId = searchResult.contactId;
+
+    // If contact not found, create a new one
+    if (!contactId) {
+      if (!contactData) {
+        console.warn('Contact not found for email:', email, 'and no contact data provided for creation');
+        return {
+          success: false,
+          error: 'Contact not found in HubSpot and no contact data provided for creation',
+        };
+      }
+
+      console.log(`Contact not found for email: ${email}, creating new contact`);
+      const createResult = await createContact({
+        email,
+        firstname: contactData.firstname,
+        lastname: contactData.lastname,
+        phone: contactData.phone,
+      });
+
+      if (!createResult.success || !createResult.contactId) {
+        console.error('Failed to create contact:', createResult.error);
+        return {
+          success: false,
+          error: createResult.error || 'Failed to create contact',
+        };
+      }
+
+      contactId = createResult.contactId;
+    }
 
     // Update the contact to mark them as marketing-eligible
     // We set the hs_legal_basis property to indicate lawful basis for processing
